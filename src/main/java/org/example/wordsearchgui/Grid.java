@@ -1,6 +1,5 @@
-package com.gradescope.wordsearch;
+package org.example.wordsearchgui;
 
-import javax.lang.model.element.NestingKind;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
