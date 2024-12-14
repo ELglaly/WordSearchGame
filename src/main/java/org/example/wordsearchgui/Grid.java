@@ -12,7 +12,7 @@ public class Grid {
     private int cols;
     private char[][] grid;
     private ArrayList<String> words;
-    private Boolean DigonalPlace=false;
+    private Boolean digonalPlaced=false;
     private final int[][] directions = {
             {0, 1}, {1, 0}, {1, 1},  // Horizontal, Vertical, Diagonal
     };
@@ -41,7 +41,7 @@ public class Grid {
     }
 
     /**
-     * Fills the remaining empty spaces in the grid with random letters.
+     * Fills the remaining empty spaces in the grid with random wordDetails.
      */
     public void fillGridWithLetters() {
         Random random = new Random();
@@ -55,30 +55,30 @@ public class Grid {
 
     /**
      * Places all words in the word list into the grid.
-     * Words are placed in random directions and positions.
-     * Ensures at least one word is placed diagonally.
+     * Words are wordPlaced in random directions and positions.
+     * Ensures at least one word is wordPlaced diagonally.
      */
     public void placeWords() {
         for (String word : words) {
-            boolean placed = false;
+            boolean wordPlaced = false;
             // Convert the word to uppercase
             word = word.toUpperCase();
-            // Keep trying until the word is placed
-            while (!placed) {
+            // Keep trying until the word is wordPlaced
+            while (!wordPlaced) {
                 Random random = new Random();
                 int startRow = random.nextInt(rows);
                 int startCol = random.nextInt(cols);
                 // random direction
                 int[] direction = directions[random.nextInt(directions.length)];
-                // ensure at least one diagonal is placed
-                if(!DigonalPlace)
+                // ensure at least one diagonal is wordPlaced
+                if(!digonalPlaced)
                 {
-                    DigonalPlace=true;
+                    digonalPlaced=true;
                     direction[1] =1; // force diagonal direction
                     direction[0] =1;
                 }
                 // Attempt to place the word
-                placed = checkPlaceWord(word,direction,startRow,startCol);
+                wordPlaced = checkPlaceWord(word,direction,startRow,startCol);
             }
         }
     }
@@ -89,7 +89,7 @@ public class Grid {
      * @param direction The direction to place the word ({rowIncrement, colIncrement})
      * @param startRow  The starting row
      * @param startCol  The starting column
-     * @return True if the word was placed successfully; false otherwise
+     * @return True if the word was wordPlaced successfully; false otherwise
      */
     public boolean checkPlaceWord(String word, int[] direction, int startRow, int startCol) {
         // calculate the end position of the word
@@ -99,7 +99,7 @@ public class Grid {
         if (endRow >= rows || endCol >= cols) {
             return false; // Out of bounds
         }
-        // check for conflicts with existing letters
+        // check for conflicts with existing wordDetails
         for (int i = 0; i < word.length(); i++) {
             int row = startRow + i * direction[0];
             int col = startCol + i * direction[1];
@@ -108,23 +108,8 @@ public class Grid {
             }
         }
         // place the word in the grid
-        ArrayList<Integer> letters = new ArrayList<Integer>();
-        letters.add(startRow);
-        letters.add(startCol);
-        if(direction[0]==0)
-        {
-            letters.add(0); //Horizintal
-        }
-        else {
-            if(direction[1]==0)
-            {
-                letters.add(1); // Vertical
-            }
-            else{
-                letters.add(2); // Digonal
-            }
-        }
-        gridMap.put(word,letters);
+        ArrayList<Integer> wordDetails=setWordDetails(startCol,startRow,direction);
+        gridMap.put(word,wordDetails);
         for (int i = 0; i < word.length(); i++) {
             int row = startRow + i * direction[0];
             int col = startCol + i * direction[1];
@@ -132,6 +117,28 @@ public class Grid {
         }
         return true;
     }
+
+    private ArrayList<Integer> setWordDetails(int startCol, int startRow, int[] direction) {
+        ArrayList<Integer> wordDetails = new ArrayList<Integer>();
+        wordDetails.add(startRow);
+        wordDetails.add(startCol);
+        if(direction[0]==0)
+        {
+            wordDetails.add(0); //Horizintal
+        }
+        else {
+            if(direction[1]==0)
+            {
+                wordDetails.add(1); // Vertical
+            }
+            else{
+                wordDetails.add(2); // Digonal
+            }
+        }
+        return wordDetails;
+
+    }
+
 
     /**
      * Sets the list of words to place in the grid.
@@ -142,22 +149,14 @@ public class Grid {
         this.words = words;
     }
 
-    /**
-     * Returns the list of words in the grid.
-     *
-     * @return The list of words
-     */
-    public ArrayList<String> getWords() {
-        return words;
-    }
 
     /**
-     * Prints the grid to a file and fills empty spaces with random letters.
+     * Prints the grid to a file and fills empty spaces with random wordDetails.
      *
      * @return The FileWriter object used to write the grid
      * @throws IOException If an error occurs during file writing
      */
-    public String [][] printGrid()  {
+    public String [][] getGridAsArray()  {
         String grid2[][]=new String[rows+1][cols+1];
         fillGridWithLetters();
         for (int i = 0; i < rows+1; i++) {
